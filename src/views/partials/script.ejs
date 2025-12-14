@@ -1,0 +1,23 @@
+<script>
+  // Input glow
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('focus', () => {
+      el.classList.add('ring-2', 'ring-accent/40');
+    });
+    el.addEventListener('blur', () => {
+      el.classList.remove('ring-2', 'ring-accent/40');
+    });
+  });
+
+  // Button hover lift
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.transform = 'translateY(-2px)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translateY(0)';
+    });
+  });
+</script>
+</body>
+</html>

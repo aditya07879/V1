@@ -1,0 +1,193 @@
+<%- include('partials/head', { title: 'Election Results' }) %>
+<%- include('partials/nav', { user }) %>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.9s ease-out both; }
+
+  .rank-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+</style>
+
+<%
+  // ===== RANK LOGIC (TIE SAFE) =====
+  const totalVotes = results.reduce((s, r) => s + r.votes, 0);
+
+  // Unique vote counts sorted DESC
+  const voteRanks = [...new Set(results.map(r => r.votes))]
+    .sort((a, b) => b - a);
+%>
+
+<main class="min-h-screen bg-bg py-24">
+  <div class="max-w-6xl mx-auto px-6 space-y-20">
+
+    <!-- HEADER -->
+    <section class="fade-up">
+      <h1 class="text-white text-4xl font-semibold">
+        <%= election.title %>
+      </h1>
+      <p class="text-muted mt-1">
+        Final & Official Election Results
+      </p>
+    </section>
+
+    <!-- OUTCOME -->
+    <section class="fade-up bg-gradient-to-br
+      from-emerald-500/20 via-teal-500/20 to-cyan-500/20
+      border border-emerald-400/30 rounded-3xl p-10 shadow-2xl">
+
+      <p class="text-muted uppercase tracking-widest text-sm mb-3">
+        🏁 Election Outcome
+      </p>
+
+      <% if (winners.length === 1) { %>
+        <h2 class="text-white text-4xl font-bold mb-2">
+          🏆 <%= winners[0].name %>
+        </h2>
+        <p class="text-emerald-300 text-lg">
+          Winner with <%= highestVotes %> votes
+        </p>
+      <% } else { %>
+        <h2 class="text-white text-3xl font-bold mb-3">
+          🤝 Tie Result
+        </h2>
+        <p class="text-muted">
+          Multiple candidates received the highest number of votes.
+        </p>
+      <% } %>
+    </section>
+
+    <!-- CHARTS -->
+    <section class="grid md:grid-cols-2 gap-12 fade-up">
+
+      <div class="bg-card rounded-3xl p-8 shadow-xl">
+        <h3 class="text-white mb-6 font-medium">Vote Count Comparison</h3>
+        <canvas id="barChart" height="160"></canvas>
+      </div>
+
+      <div class="bg-card rounded-3xl p-8 shadow-xl">
+        <h3 class="text-white mb-6 font-medium">Vote Share Distribution</h3>
+        <canvas id="donutChart" height="160"></canvas>
+      </div>
+
+    </section>
+
+    <!-- TABLE (TIE-AWARE RANKING) -->
+    <section class="bg-card rounded-3xl p-8 shadow-xl fade-up">
+      <h3 class="text-white text-lg font-medium mb-6">
+        Detailed Breakdown
+      </h3>
+
+      <table class="w-full text-sm">
+        <thead class="text-muted border-b border-white/10">
+          <tr>
+            <th class="py-3 text-left">Candidate</th>
+            <th class="py-3 text-right">Votes</th>
+            <th class="py-3 text-right">Share</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% results.forEach(r => {
+            const percent = totalVotes
+              ? ((r.votes / totalVotes) * 100).toFixed(1)
+              : 0;
+
+            const rank = voteRanks.indexOf(r.votes) + 1;
+          %>
+            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+              <td class="py-4 text-white flex items-center gap-3">
+                <%= r.name %>
+
+                <% if (rank === 1) { %>
+                  <span class="rank-badge bg-amber-400 text-black">
+                    🥇 1st <%= winners.length > 1 ? '(Tie)' : '' %>
+                  </span>
+                <% } else if (rank === 2) { %>
+                  <span class="rank-badge bg-slate-300 text-black">🥈 2nd</span>
+                <% } else if (rank === 3) { %>
+                  <span class="rank-badge bg-orange-500 text-black">🥉 3rd</span>
+                <% } %>
+              </td>
+
+              <td class="py-4 text-right text-white font-medium">
+                <%= r.votes %>
+              </td>
+
+              <td class="py-4 text-right text-muted">
+                <%= percent %>%
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  const results = <%- JSON.stringify(results) %>;
+  const highestVotes = <%- JSON.stringify(highestVotes) %>;
+  const singleWinner = <%- JSON.stringify(winners.length === 1) %>;
+
+  const labels = results.map(r => r.name);
+  const votes = results.map(r => r.votes);
+
+  const colors = results.map(r =>
+    r.votes === highestVotes && highestVotes > 0
+      ? "rgba(16,185,129,0.9)"   // emerald (top rank)
+      : "rgba(148,163,184,0.6)" // muted
+  );
+
+  new Chart(barChart, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{ data: votes, backgroundColor: colors, borderRadius: 14 }]
+    },
+    options: {
+      animation: { duration: 1200 },
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+    }
+  });
+
+  new Chart(donutChart, {
+    type: "doughnut",
+    data: {
+      labels,
+      datasets: [{ data: votes, backgroundColor: colors }]
+    },
+    options: {
+      animation: { duration: 1200 },
+      plugins: {
+        legend: { position: "bottom", labels: { color: "#B3B4BD" } }
+      }
+    }
+  });
+
+  // 🎉 CONFETTI ONLY FOR SINGLE WINNER
+  if (singleWinner) {
+    setTimeout(() => {
+      confetti({
+        particleCount: 180,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }, 800);
+  }
+</script>
+
+<%- include('partials/script') %>

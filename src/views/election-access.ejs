@@ -1,0 +1,41 @@
+<%- include('partials/head', { title: 'Election Access' }) %>
+<%- include('partials/nav', { user }) %>
+
+<main class="min-h-screen bg-bg flex items-center justify-center px-6">
+  <div class="bg-card rounded-2xl p-8 max-w-md w-full shadow-lg shadow-black/40">
+
+    <h1 class="text-white text-2xl font-semibold mb-3">
+      Enter Voter Access Key
+    </h1>
+
+    <p class="text-muted mb-6">
+      This key is required to unlock the election.
+    </p>
+
+    <form method="POST" action="/elections/<%= election._id %>/verify">
+      <input
+        type="text"
+        name="voterKey"
+        placeholder="Voter key"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white mb-4"
+      />
+
+      <button
+        class="w-full bg-accent py-3 rounded-md text-white
+               font-medium hover:brightness-125 transition">
+        Verify Key
+      </button>
+    </form>
+
+    <% if (error) { %>
+      <p class="text-red-400 text-sm mt-4">
+        <%= error %>
+      </p>
+    <% } %>
+
+  </div>
+</main>
+
+<%- include('partials/script') %>

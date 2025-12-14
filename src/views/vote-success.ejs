@@ -1,0 +1,30 @@
+<%- include('partials/head', { title: 'Vote Recorded' }) %>
+<%- include('partials/nav') %>
+
+<main class="min-h-screen bg-bg flex items-center justify-center px-6">
+  <div class="bg-card rounded-2xl p-10 max-w-md w-full text-center">
+
+    <h1 class="text-white text-3xl font-semibold mb-3">
+      Vote Recorded
+    </h1>
+
+    <p class="text-muted mb-8">
+      Your vote has been securely recorded.
+    </p>
+
+    <div class="bg-bg rounded-xl p-5 text-left mb-8">
+      <p class="text-sm text-muted">Election</p>
+      <p class="text-white mb-4"><%= election.title %></p>
+
+      <p class="text-sm text-muted">Timestamp</p>
+      <p class="text-white"><%= timestamp %></p>
+
+      <p class="text-sm text-muted mt-4">Status</p>
+      <p class="text-accent font-medium">Recorded</p>
+    </div>
+
+    <a href="/" class="bg-accent px-6 py-3 rounded-lg text-white">
+      Return to Home
+    </a>
+  </div>
+</main>

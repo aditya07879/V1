@@ -1,0 +1,142 @@
+<%- include('partials/head', { title: 'Home | SecureVote' }) %>
+<%- include('partials/nav', { user }) %>
+
+<!-- ================= HERO ================= -->
+<section class="relative overflow-hidden bg-bg border-b border-white/10">
+  <div class="h-[80vh] flex items-center justify-center bg-navy relative">
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/90"></div>
+
+    <div class="relative z-10 text-center px-6">
+      <h1 class="text-white text-5xl md:text-6xl font-semibold mb-6">
+        𝚅𝚘𝚝𝚎. 𝚅𝚎𝚛𝚒𝚏𝚢. 𝚃𝚛𝚞𝚜𝚝.
+      </h1>
+      <p class="text-muted max-w-2xl mx-auto text-lg mb-8">
+        𝖠 𝗌𝖾𝖼𝗎𝗋𝖾 𝖽𝗂𝗀𝗂𝗍𝖺𝗅 𝗏𝗈𝗍𝗂𝗇𝗀 𝗂𝗇𝖿𝗋𝖺𝗌𝗍𝗋𝗎𝖼𝗍𝗎𝗋𝖾 𝖻𝗎𝗂𝗅𝗍 𝖿𝗈𝗋 𝗍𝗋𝖺𝗇𝗌𝗉𝖺𝗋𝖾𝗇𝖼𝗒.
+      </p>
+
+      <a href="#elections"
+         class="inline-block bg-accent text-white px-6 py-3 rounded-lg font-medium
+                hover:brightness-125 transition shadow-lg shadow-accent/30">
+        Explore Elections
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="bg-bg py-20">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 px-6">
+
+    <div class="bg-card rounded-2xl p-8 text-center shadow-lg">
+      <h3 class="text-white text-3xl font-semibold mb-2">
+        <%= elections.length %>
+      </h3>
+      <p class="text-muted text-sm uppercase tracking-wide">
+        Total Elections
+      </p>
+    </div>
+
+    <div class="bg-card rounded-2xl p-8 text-center shadow-lg">
+      <h3 class="text-white text-3xl font-semibold mb-2">
+        <%= elections.filter(e => e.isPublished).length %>
+      </h3>
+      <p class="text-muted text-sm uppercase tracking-wide">
+        Voting Open
+      </p>
+    </div>
+
+    <div class="bg-card rounded-2xl p-8 text-center shadow-lg">
+      <h3 class="text-white text-3xl font-semibold mb-2">
+        <%= elections.filter(e => e.resultsPublished).length %>
+      </h3>
+      <p class="text-muted text-sm uppercase tracking-wide">
+        Results Published
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= ELECTIONS ================= -->
+<section id="elections" class="bg-navy py-24">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <h2 class="text-white text-3xl font-semibold mb-12">
+      Available Elections
+    </h2>
+
+    <% if (elections.length === 0) { %>
+      <p class="text-muted">No elections available.</p>
+    <% } %>
+
+    <div class="grid md:grid-cols-3 gap-10">
+
+      <% elections.forEach(election => { %>
+        <div class="bg-card rounded-2xl p-6
+                    hover:-translate-y-2 transition
+                    shadow-lg shadow-black/30">
+
+          <!-- TITLE + STATUS -->
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-white font-medium text-lg">
+              <%= election.title %>
+            </h3>
+
+            <% if (election.resultsPublished) { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-emerald-500/20 text-emerald-400">
+                Results Published
+              </span>
+            <% } else if (election.isPublished) { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-accent/20 text-accent">
+                Voting Open
+              </span>
+            <% } else { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-gray-500/20 text-gray-400">
+                Not Available
+              </span>
+            <% } %>
+          </div>
+
+          <!-- DESCRIPTION -->
+          <p class="text-muted text-sm mb-6 leading-relaxed">
+            <%= election.description %>
+          </p>
+
+          <!-- ACTION BUTTON -->
+          <% if (election.resultsPublished) { %>
+            <!-- ✅ RESULTS -->
+            <a href="/results/<%= election._id %>"
+               class="inline-block bg-emerald-500/20 text-emerald-400
+                      px-5 py-2.5 rounded-lg
+                      hover:bg-emerald-500 hover:text-black transition">
+              View Results →
+            </a>
+
+          <% } else if (election.isPublished) { %>
+            <!-- 🗳 VOTE -->
+            <a href="/elections/<%= election._id %>"
+               class="inline-block bg-accent text-white
+                      px-5 py-2.5 rounded-lg
+                      hover:brightness-125 transition">
+              View Election →
+            </a>
+
+          <% } else { %>
+            <!-- 🔒 -->
+            <span class="text-muted text-sm">
+              Election not active
+            </span>
+          <% } %>
+
+        </div>
+      <% }) %>
+
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
+<%- include('partials/script') %>

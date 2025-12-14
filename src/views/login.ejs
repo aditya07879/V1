@@ -1,0 +1,50 @@
+<%- include('partials/head', { title: 'Login | SecureVote' }) %>
+
+<main class="min-h-screen flex items-center justify-center bg-bg px-4">
+  <div class="bg-card rounded-2xl shadow-xl shadow-black/40
+              w-full max-w-md p-8 fade-slide">
+
+    <h2 class="text-white text-2xl font-semibold mb-2">
+      Login
+    </h2>
+    <p class="text-muted mb-6">
+      Access the secure voting platform
+    </p>
+
+    <form method="POST" action="/api/auth/login" class="space-y-5">
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-accent py-3 rounded-md text-white font-medium
+               hover:brightness-125 transition shadow shadow-accent/30">
+        Login
+      </button>
+    </form>
+
+    <p class="text-sm text-muted mt-6 text-center">
+      Don’t have an account?
+      <a href="/register" class="text-accent hover:underline">
+        Register
+      </a>
+    </p>
+  </div>
+</main>
+
+<%- include('partials/script') %>

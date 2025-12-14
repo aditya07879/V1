@@ -1,0 +1,113 @@
+<%- include('partials/head', { title: 'My Elections' }) %>
+<%- include('partials/nav', { user }) %>
+
+<style>
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up {
+    animation: fadeUp 0.7s ease-out both;
+  }
+</style>
+
+<main class="min-h-screen bg-bg py-24">
+  <div class="max-w-7xl mx-auto px-6 space-y-14">
+
+    <!-- ================= HEADER ================= -->
+    <section class="fade-up">
+      <h1 class="text-white text-4xl font-semibold">
+        My Elections
+      </h1>
+      <p class="text-muted mt-1">
+        Elections you have participated in
+      </p>
+    </section>
+
+    <!-- ================= EMPTY STATE ================= -->
+    <% if (!elections || elections.length === 0) { %>
+      <section class="fade-up bg-card rounded-2xl p-12 text-center shadow-lg">
+        <p class="text-white text-lg mb-2">
+          You haven’t voted in any elections yet.
+        </p>
+        <p class="text-muted mb-6">
+          Once you vote, your elections will appear here.
+        </p>
+
+        <a href="/"
+           class="inline-block bg-accent text-white px-6 py-3 rounded-lg
+                  hover:brightness-125 transition">
+          Browse Elections
+        </a>
+      </section>
+    <% } %>
+
+    <!-- ================= ELECTION LIST ================= -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+      <% elections.forEach(election => { %>
+        <div class="fade-up bg-card rounded-2xl p-6 shadow-lg
+                    hover:-translate-y-2 transition">
+
+          <!-- TITLE + STATUS -->
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-white font-medium text-lg">
+              <%= election.title %>
+            </h3>
+
+            <% if (election.resultsPublished) { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-emerald-500/20 text-emerald-400">
+                Results Published
+              </span>
+            <% } else if (election.isPublished) { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-accent/20 text-accent">
+                Voting Open
+              </span>
+            <% } else { %>
+              <span class="text-xs px-3 py-1 rounded-full
+                           bg-gray-500/20 text-gray-400">
+                Closed
+              </span>
+            <% } %>
+          </div>
+
+          <!-- DESCRIPTION -->
+          <p class="text-muted text-sm mb-6 leading-relaxed">
+            <%= election.description || "No description available." %>
+          </p>
+
+          <!-- ACTION -->
+          <div class="flex items-center justify-between">
+
+            <% if (election.resultsPublished) { %>
+              <a href="/results/<%= election._id %>"
+                 class="bg-emerald-500/20 text-emerald-400
+                        px-4 py-2 rounded-lg
+                        hover:bg-emerald-500 hover:text-black transition">
+                View Results →
+              </a>
+
+            <% } else if (election.isPublished) { %>
+              <span class="text-muted text-sm">
+                Voting in progress
+              </span>
+
+            <% } else { %>
+              <span class="text-muted text-sm">
+                Election closed
+              </span>
+            <% } %>
+
+          </div>
+        </div>
+      <% }) %>
+
+    </div>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/script') %>

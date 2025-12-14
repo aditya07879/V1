@@ -1,0 +1,59 @@
+<%- include('partials/head', { title: 'Register | SecureVote' }) %>
+
+<main class="min-h-screen flex items-center justify-center bg-bg px-4">
+  <div class="bg-card rounded-2xl shadow-xl shadow-black/40
+              w-full max-w-md p-8 fade-slide">
+
+    <h2 class="text-white text-2xl font-semibold mb-2">
+      Register
+    </h2>
+    <p class="text-muted mb-6">
+      Create a secure voting account
+    </p>
+
+    <form method="POST" action="/api/auth/register" class="space-y-5">
+      <input
+        type="text"
+        name="name"
+        placeholder="Full Name"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+        class="w-full bg-bg border border-white/10 rounded-md
+               px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent/40"
+      />
+
+      <button
+        type="submit"
+        class="w-full bg-accent py-3 rounded-md text-white font-medium
+               hover:brightness-125 transition shadow shadow-accent/30">
+        Create Account
+      </button>
+    </form>
+
+    <p class="text-sm text-muted mt-6 text-center">
+      Already registered?
+      <a href="/login" class="text-accent hover:underline">
+        Login
+      </a>
+    </p>
+  </div>
+</main>
+
+<%- include('partials/script') %>

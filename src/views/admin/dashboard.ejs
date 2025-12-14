@@ -1,0 +1,142 @@
+<%- include('../partials/head', { title: 'Admin Dashboard' }) %>
+<%- include('../partials/nav', { user }) %>
+
+<main class="min-h-screen bg-bg py-16">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <!-- ================= HEADER ================= -->
+    <section class="mb-14">
+      <h1 class="text-white text-3xl font-semibold">
+        Admin Dashboard
+      </h1>
+      <p class="text-muted">
+        System overview and election lifecycle control
+      </p>
+    </section>
+
+    <!-- ================= STATS ================= -->
+    <section class="grid md:grid-cols-4 gap-6 mb-16">
+      <% stats.forEach(stat => { %>
+        <div class="bg-card rounded-xl p-6 shadow-lg
+                    hover:shadow-accent/10 transition">
+          <h3 class="text-white text-3xl font-semibold mb-1">
+            <%= stat.value %>
+          </h3>
+          <p class="text-muted text-sm uppercase tracking-wide">
+            <%= stat.label %>
+          </p>
+        </div>
+      <% }) %>
+    </section>
+
+    <!-- ================= ELECTIONS TABLE ================= -->
+    <section class="bg-card rounded-2xl p-6 shadow-lg">
+      <h2 class="text-white font-semibold mb-6">
+        Elections
+      </h2>
+
+      <table class="w-full text-sm text-left">
+        <thead class="text-muted border-b border-white/10">
+          <tr>
+            <th class="py-3">Election</th>
+            <th>Status</th>
+            <th>Votes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% elections.forEach(e => { %>
+            <tr class="border-b border-white/5 last:border-none">
+
+              <!-- TITLE -->
+              <td class="py-4 text-white font-medium">
+                <%= e.title %>
+              </td>
+
+              <!-- STATUS (FINAL STATE FIRST) -->
+              <td>
+                <% if (e.resultsPublished) { %>
+                  <span class="px-3 py-1 rounded-full text-xs
+                               bg-blue-500/20 text-blue-400">
+                    Results Published
+                  </span>
+                <% } else if (e.isPublished) { %>
+                  <span class="px-3 py-1 rounded-full text-xs
+                               bg-green-500/20 text-green-400">
+                    Voting Open
+                  </span>
+                <% } else { %>
+                  <span class="px-3 py-1 rounded-full text-xs
+                               bg-gray-500/20 text-gray-400">
+                    Draft
+                  </span>
+                <% } %>
+              </td>
+
+              <!-- VOTES -->
+              <td class="text-white">
+                <%= e.voteCount || 0 %>
+              </td>
+
+              <!-- ACTIONS -->
+              <td class="space-x-4">
+
+                <!-- MANAGE (ALWAYS AVAILABLE BEFORE RESULTS) -->
+                <% if (!e.resultsPublished) { %>
+                  <a
+                    href="/admin/elections/<%= e._id %>/edit"
+                    class="text-accent hover:underline">
+                    Manage
+                  </a>
+                <% } %>
+
+                <!-- OPEN VOTING -->
+                <% if (!e.isPublished) { %>
+                  <a
+                    href="/admin/elections/<%= e._id %>/publish"
+                    class="text-blue-400 hover:underline">
+                    Open Voting
+                  </a>
+                <% } %>
+
+                <!-- PUBLISH RESULTS -->
+                <% if (e.isPublished && !e.resultsPublished) { %>
+                  <a
+                    href="/admin/elections/<%= e._id %>/results/publish"
+                    class="text-red-400 hover:underline">
+                    Publish Results
+                  </a>
+                <% } %>
+
+                <!-- VIEW RESULTS (VERY IMPORTANT) -->
+                <% if (e.resultsPublished) { %>
+                  <a
+                    href="/results/<%= e._id %>"
+                    class="text-green-400 font-medium hover:underline">
+                    View Results
+                  </a>
+                <% } %>
+
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================= QUICK ACTION ================= -->
+    <section class="mt-12">
+      <a
+        href="/admin/elections/new"
+        class="inline-block bg-accent px-6 py-3 rounded-lg
+               text-white hover:brightness-125 transition">
+        + Create New Election
+      </a>
+    </section>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
+<%- include('../partials/script') %>

@@ -1,0 +1,49 @@
+<%- include('../partials/head', { title: 'Publish Results' }) %>
+<%- include('../partials/nav') %>
+
+<main class="min-h-screen bg-bg flex items-center justify-center px-6">
+  <div class="bg-card rounded-2xl p-8 max-w-lg w-full shadow-xl">
+
+    <!-- TITLE -->
+    <h1 class="text-white text-2xl font-semibold mb-4">
+      Publish Election Results
+    </h1>
+
+    <!-- WARNING -->
+    <p class="text-muted mb-6 leading-relaxed">
+      You are about to publish the final results for:
+      <span class="text-white font-medium">
+        <%= election.title %>
+      </span>
+      <br />
+      <span class="text-red-400 text-sm">
+        This action is permanent. Voting will be closed forever.
+      </span>
+    </p>
+
+    <!-- ✅ CORRECT POST ROUTE -->
+    <form
+      method="POST"
+      action="/admin/elections/<%= election._id %>/results/publish"
+    >
+      <button
+        type="submit"
+        class="w-full bg-red-600 hover:bg-red-700
+               text-white py-3 rounded-lg font-medium transition"
+      >
+        Confirm & Publish Results
+      </button>
+    </form>
+
+    <!-- CANCEL -->
+    <a
+      href="/admin/dashboard"
+      class="block text-center text-muted mt-4 hover:underline"
+    >
+      Cancel and go back
+    </a>
+
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

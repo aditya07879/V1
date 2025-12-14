@@ -1,0 +1,153 @@
+<%- include('partials/head', { title: 'My Profile' }) %>
+<%- include('partials/nav', { user }) %>
+
+<main class="min-h-screen bg-bg py-24">
+  <div class="max-w-4xl mx-auto px-6 space-y-16">
+
+    <!-- ================= PROFILE HEADER ================= -->
+    <section>
+      <h1 class="text-white text-4xl font-semibold">
+        My Profile
+      </h1>
+      <p class="text-muted mt-1">
+        Manage your personal information and security
+      </p>
+    </section>
+
+    <!-- ================= PROFILE OVERVIEW ================= -->
+    <section class="bg-card rounded-2xl p-8 shadow-lg">
+      <div class="flex items-center justify-between flex-wrap gap-6">
+        <div>
+          <h2 class="text-white text-xl font-semibold mb-2">
+            Profile Overview
+          </h2>
+
+          <p class="text-muted">
+            Name:
+            <span class="text-white font-medium">
+              <%= user.name %>
+            </span>
+          </p>
+
+          <p class="text-muted">
+            Email:
+            <span class="text-white font-medium">
+              <%= user.email %>
+            </span>
+          </p>
+        </div>
+
+        <!-- ROLE BADGE -->
+        <% if (user.role === 'admin') { %>
+          <span class="px-4 py-2 rounded-full
+                       bg-purple-500/20 text-purple-400 text-sm">
+            Administrator
+          </span>
+        <% } else { %>
+          <span class="px-4 py-2 rounded-full
+                       bg-blue-500/20 text-blue-400 text-sm">
+            User
+          </span>
+        <% } %>
+      </div>
+    </section>
+
+    <!-- ================= UPDATE PROFILE ================= -->
+    <section class="bg-card rounded-2xl p-8">
+      <h2 class="text-white text-xl font-semibold mb-6">
+        Update Profile
+      </h2>
+
+      <form
+        method="POST"
+        action="/api/users/me"
+        class="grid md:grid-cols-2 gap-6"
+      >
+        <!-- method override -->
+        
+
+        <div>
+          <label class="block text-sm text-muted mb-2">
+            Full Name
+          </label>
+          <input
+            name="name"
+            value="<%= user.name %>"
+            required
+            class="w-full bg-bg border border-white/10 rounded-lg
+                   px-4 py-3 text-white focus:ring-2
+                   focus:ring-accent outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm text-muted mb-2">
+            Email Address
+          </label>
+          <input
+            type="email"
+            name="email"
+            value="<%= user.email %>"
+            required
+            class="w-full bg-bg border border-white/10 rounded-lg
+                   px-4 py-3 text-white focus:ring-2
+                   focus:ring-accent outline-none"
+          />
+        </div>
+
+        <div class="md:col-span-2">
+          <button
+            class="bg-accent text-white px-8 py-3 rounded-lg
+                   hover:brightness-110 transition">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ================= SECURITY ================= -->
+    <section class="bg-card rounded-2xl p-8">
+      <h2 class="text-white text-xl font-semibold mb-4">
+        Security
+      </h2>
+
+      <p class="text-muted text-sm mb-6">
+        Updating your password will log you out from other sessions.
+      </p>
+
+      <form
+        method="POST"
+        action="/api/users/me"
+        class="max-w-md space-y-5"
+      >
+        <!-- method override -->
+        <input type="hidden" name="_method" value="PUT" />
+
+        <div>
+          <label class="block text-sm text-muted mb-2">
+            New Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter new password"
+            required
+            class="w-full bg-bg border border-white/10 rounded-lg
+                   px-4 py-3 text-white focus:ring-2
+                   focus:ring-accent outline-none"
+          />
+        </div>
+
+        <button
+          class="bg-red-500/20 text-red-400 px-6 py-3 rounded-lg
+                 hover:bg-red-500 hover:text-white transition">
+          Update Password
+        </button>
+      </form>
+    </section>
+
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/script') %>
