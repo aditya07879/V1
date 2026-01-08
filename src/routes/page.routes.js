@@ -1,4 +1,3 @@
-console.log("🔥 PAGE ROUTES FILE LOADED");
 const express = require("express");
 const router = express.Router();
 

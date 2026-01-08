@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invalid Credentials</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Shake Animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-8px); }
+      30% { transform: translateX(8px); }
+      45% { transform: translateX(-6px); }
+      60% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+      90% { transform: translateX(4px); }
+    }
+
+    .shake {
+      animation: shake 0.6s ease-in-out;
+    }
+
+    /* Fade + Scale */
+    @keyframes fadeScale {
+      from {
+        opacity: 0;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .fade-scale {
+      animation: fadeScale 0.6s ease-out;
+    }
+
+    /* Glow Pulse */
+    @keyframes glow {
+      0%, 100% {
+        box-shadow: 0 0 15px rgba(239,68,68,0.3);
+      }
+      50% {
+        box-shadow: 0 0 30px rgba(239,68,68,0.6);
+      }
+    }
+
+    .glow {
+      animation: glow 1.5s infinite;
+    }
+
+    /* Progress Bar */
+    @keyframes progress {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+
+    .progress-bar {
+      animation: progress 3s linear forwards;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black flex items-center justify-center">
+
+  <div class="bg-gray-900/90 backdrop-blur border border-red-500/30 rounded-2xl shadow-2xl px-10 py-12 w-[90%] max-w-md text-center fade-scale shake glow">
+
+    <!-- Error Icon -->
+    <div class="flex justify-center mb-6">
+      <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center animate-pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-9 w-9 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-2xl font-semibold text-red-500 mb-3 tracking-wide">
+      Authentication Failed
+    </h1>
+
+    <!-- Message -->
+    <p class="text-gray-300 text-sm leading-relaxed mb-6">
+      The credentials you entered do not match our records.
+      For security reasons, please try again carefully.
+    </p>
+
+    <!-- Countdown -->
+    <p class="text-gray-400 text-xs mb-3">
+      Redirecting to login page in <span id="countdown" class="text-red-400 font-medium">3</span> seconds
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+      <div class="h-full bg-red-600 progress-bar"></div>
+    </div>
+
+    <!-- Manual Action -->
+    <div class="mt-6">
+      <a href="/login" class="text-sm text-gray-400 hover:text-white transition">
+        Click here if not redirected automatically
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Redirect Script -->
+  <script>
+    let timeLeft = 3;
+    const countdown = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+      timeLeft--;
+      countdown.textContent = timeLeft;
+
+      if (timeLeft === 0) {
+        clearInterval(timer);
+        window.location.href = "/login"; // change if needed
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
