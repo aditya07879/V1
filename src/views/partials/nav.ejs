@@ -1,4 +1,4 @@
-<nav class="bg-bg border-b border-white/10">
+<nav class="bg-bg border-b border-white/10 relative">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex items-center justify-between h-16">
 
@@ -7,7 +7,7 @@
         𝐕𝐎𝐓𝐄𝐇𝐔𝐁🌐
       </a>
 
-      <!-- CENTER: MAIN LINKS -->
+      <!-- CENTER: NAV LINKS (DESKTOP ONLY) -->
       <div class="hidden md:flex items-center gap-8">
 
         <a href="/" class="text-muted hover:text-white transition">
@@ -15,14 +15,11 @@
         </a>
 
         <% if (user) { %>
-          <a href="/profile"
-             class="text-muted hover:text-white transition">
+          <a href="/profile" class="text-muted hover:text-white transition">
             Profile
           </a>
 
-          <!-- ✅ MY ELECTIONS (USER) -->
-          <a href="/my-elections"
-             class="text-muted hover:text-white transition">
+          <a href="/my-elections" class="text-muted hover:text-white transition">
             My Elections
           </a>
         <% } %>
@@ -36,55 +33,141 @@
 
       </div>
 
-      <!-- RIGHT: AUTH / USER INFO -->
+      <!-- RIGHT: ROLE BADGE + MENU ICON / AUTH -->
       <div class="flex items-center gap-4">
 
-        <% if (!user) { %>
-          <!-- NOT LOGGED IN -->
-          <a href="/login"
-             class="text-muted hover:text-white transition">
-            Login
-          </a>
-
-          <a href="/register"
-             class="bg-accent text-white px-4 py-2 rounded-lg
-                    hover:bg-accent/90 transition">
-            Register
-          </a>
-
-        <% } else { %>
-          <!-- LOGGED IN -->
-          <div class="flex items-center gap-3">
-
-            <!-- 👤 USER NAME -->
-            <span class="text-sm text-muted hidden sm:block">
-              <%= user.name %>
+        <!-- ROLE BADGE (DESKTOP) -->
+        <% if (user) { %>
+          <% if (user.role === 'admin') { %>
+            <span class="hidden md:inline text-xs px-3 py-1 rounded-full
+                         bg-purple-500/20 text-purple-400">
+              Admin
             </span>
+          <% } else { %>
+            <span class="hidden md:inline text-xs px-3 py-1 rounded-full
+                         bg-blue-500/20 text-blue-400">
+              User
+            </span>
+          <% } %>
+        <% } %>
 
-            <!-- 🏷 ROLE BADGE -->
-            <% if (user.role === 'admin') { %>
-              <span class="text-xs px-2 py-1 rounded-full
-                           bg-purple-500/20 text-purple-400">
-                Admin
-              </span>
-            <% } else { %>
-              <span class="text-xs px-2 py-1 rounded-full
-                           bg-blue-500/20 text-blue-400">
-                User
-              </span>
-            <% } %>
+        <!-- MOBILE MENU ICON -->
+        <button id="menuBtn"
+                class="md:hidden text-white text-2xl focus:outline-none">
+          ☰
+        </button>
 
-            <!-- 🚪 LOGOUT (GET – matches auth.routes.js) -->
+        <!-- DESKTOP AUTH / LOGOUT -->
+        <div class="hidden md:flex items-center gap-4">
+          <% if (!user) { %>
+            <a href="/login" class="text-muted hover:text-white">
+              Login
+            </a>
+            <a href="/register"
+               class="bg-accent text-white px-4 py-2 rounded-lg">
+              Register
+            </a>
+          <% } else { %>
             <a href="/api/auth/logout"
                class="bg-red-500/10 text-red-400 px-4 py-2 rounded-lg
                       hover:bg-red-500 hover:text-white transition">
               Logout
             </a>
-
-          </div>
-        <% } %>
+          <% } %>
+        </div>
 
       </div>
     </div>
   </div>
+
+  <!-- BACKDROP -->
+  <div id="backdrop"
+       class="fixed inset-0 bg-black/40 hidden z-40"></div>
+
+  <!-- SLIDE MENU (MOBILE) -->
+  <div id="slideMenu"
+       class="fixed top-0 right-0 h-full w-72 bg-bg z-50
+              transform translate-x-full transition-transform duration-300 ease-in-out
+              border-l border-white/10 px-6 py-6 space-y-6">
+
+    <!-- HEADER WITH ROLE BADGE -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-white font-semibold">Menu</span>
+
+        <% if (user) { %>
+          <% if (user.role === 'admin') { %>
+            <span class="text-xs px-2 py-1 rounded-full
+                         bg-purple-500/20 text-purple-400">
+              Admin
+            </span>
+          <% } else { %>
+            <span class="text-xs px-2 py-1 rounded-full
+                         bg-blue-500/20 text-blue-400">
+              User
+            </span>
+          <% } %>
+        <% } %>
+      </div>
+
+      <button id="closeBtn" class="text-white text-xl">✕</button>
+    </div>
+
+    <hr class="border-white/10">
+
+    <!-- LINKS -->
+    <a href="/" class="block text-muted hover:text-white">
+      Home
+    </a>
+
+    <% if (user) { %>
+      <a href="/profile" class="block text-muted hover:text-white">
+        Profile
+      </a>
+
+      <a href="/my-elections" class="block text-muted hover:text-white">
+        My Elections
+      </a>
+    <% } %>
+
+    <% if (user && user.role === 'admin') { %>
+      <a href="/admin/dashboard"
+         class="block text-accent font-medium">
+        Admin Dashboard
+      </a>
+    <% } %>
+
+    <hr class="border-white/10">
+
+    <!-- LOGOUT (MOBILE) -->
+    <% if (user) { %>
+      <a href="/api/auth/logout"
+         class="block text-center bg-red-500/10 text-red-400
+                py-2 rounded-lg hover:bg-red-500 hover:text-white transition">
+        Logout
+      </a>
+    <% } %>
+
+  </div>
 </nav>
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const closeBtn = document.getElementById("closeBtn");
+  const slideMenu = document.getElementById("slideMenu");
+  const backdrop = document.getElementById("backdrop");
+
+  function openMenu() {
+    slideMenu.classList.remove("translate-x-full");
+    backdrop.classList.remove("hidden");
+  }
+
+  function closeMenu() {
+    slideMenu.classList.add("translate-x-full");
+    backdrop.classList.add("hidden");
+  }
+
+  menuBtn?.addEventListener("click", openMenu);
+  closeBtn?.addEventListener("click", closeMenu);
+  backdrop?.addEventListener("click", closeMenu);
+</script>
